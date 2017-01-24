@@ -42,6 +42,11 @@ namespace MIS677_Team4_LoginScreen_V1
             userDict.Add("oalmedaihesh", five);
         }
 
+        /// <summary>
+        /// Attempts to log in using the entered username and password, using the Pword class function 'Check Password'
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void loginLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Pword passReturn = null;
@@ -59,6 +64,11 @@ namespace MIS677_Team4_LoginScreen_V1
 
         }
 
+        /// <summary>
+        /// Simply checks to see if the user is logged in and displays a messagebox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void accessButton_Click(object sender, EventArgs e)
         {
             if (isLogged)
@@ -67,6 +77,11 @@ namespace MIS677_Team4_LoginScreen_V1
                 MessageBox.Show("Please login for access.");
         }
 
+        /// <summary>
+        /// Logs the user out and disales the logged out link, sends the user a message stating that they have logged out.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void logoutLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             isLogged = false;
@@ -82,23 +97,34 @@ namespace MIS677_Team4_LoginScreen_V1
         private bool locked;
         private DateTime lTime;
 
+        /// <summary>
+        /// Gets/sets the password value
+        /// </summary>
         public string password
         {
             get { return pass; }
             set { pass = value; }
         }
 
+        /// <summary>
+        /// Checks to see if the Pword value is locked
+        /// </summary>
         public Boolean isLocked
         {
             get { return locked; }
         }
 
+        /// <summary>
+        /// If the Pword class is locked, states the time that it was locked out.
+        /// </summary>
         public DateTime lockoutTime
         {
             get { return lTime; }
         }
 
-
+        /// <summary>
+        /// Basic constructor
+        /// </summary>
         public Pword()
         {
             pass = null;
@@ -107,6 +133,10 @@ namespace MIS677_Team4_LoginScreen_V1
             lTime = System.DateTime.Now;
         }
 
+        /// <summary>
+        /// Constructor that allows for the initial setting of the password value
+        /// </summary>
+        /// <param name="p">The value to set the password to</param>
         public Pword(string p)
         {
             pass = p;
@@ -115,6 +145,14 @@ namespace MIS677_Team4_LoginScreen_V1
             lTime = System.DateTime.Now;
         }
 
+        /// <summary>
+        /// Checks passed password against the saved one. If there is a match, informs the user and passes a 'true' bool back. If there is not, informs the user, 
+        /// Increments the fail counter. If there is three failed attempts without a successful login, sets isLocked to true and prevents further login attempts
+        /// for two hours.
+        /// </summary>
+        /// <param name="p">The password attempt to be checked</param>
+        /// <param name="u">The username associated with that password</param>
+        /// <returns></returns>
         public bool checkPassword(string p, string u)
         {
             if (locked)
