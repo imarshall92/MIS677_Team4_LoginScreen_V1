@@ -16,6 +16,7 @@ namespace MIS677_Team4_LoginScreen_V1
     {
         //Dictionary for the hard-coded user/password diagram
         private Dictionary<string, Pword> userDict;
+        private bool isLogged;
 
         //Constructor
         public Main()
@@ -23,6 +24,7 @@ namespace MIS677_Team4_LoginScreen_V1
             InitializeComponent();
             userDict = new Dictionary<string, Pword>();
             populateUDict();
+            isLogged = false;
         }
 
         //Populate the dictionary. Keys are usernames, password and login information is saved within the 'Pword' class.
@@ -40,15 +42,36 @@ namespace MIS677_Team4_LoginScreen_V1
             userDict.Add("oalmedaihesh", five);
         }
 
-        private bool login()
+        private void loginLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Pword p;
-            try
-            {  
-               userDict.TryGetValue(tb1.Text, p
-               
+            Pword passReturn = null;
+            if (userDict.TryGetValue(unameTB.Text, out passReturn))
+            {
+                if (passReturn.checkPassword(pwordTB.Text, unameTB.Text))
+                {
+                    logoutLink.Enabled = true;
+                    isLogged = true;
+                    unameTB.Text = pwordTB.Text = "";
+                }
             }
-           
+            else
+                MessageBox.Show("Username Not Found!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+        }
+
+        private void accessButton_Click(object sender, EventArgs e)
+        {
+            if (isLogged)
+                MessageBox.Show("You have access!");
+            else
+                MessageBox.Show("Please login for access.");
+        }
+
+        private void logoutLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            isLogged = false;
+            logoutLink.Enabled = false;
+            MessageBox.Show("Logged out!");
         }
     }
 
@@ -103,14 +126,14 @@ namespace MIS677_Team4_LoginScreen_V1
                 }
                 else
                 {
-                    MessageBox.Show("Failure", "Login for " + u + " is locked until:" + lTime.AddHours(2).ToLongTimeString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Login for " + u + " is locked until:" + lTime.AddHours(2).ToLongTimeString(), "Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return false;
                 }
             }
             if (p == pass && !locked)
             {
                 failAttempts = 0;
-                MessageBox.Show("Success", "User " + u + " is now logged in.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("User " + u + " is now logged in.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
             else
@@ -119,10 +142,10 @@ namespace MIS677_Team4_LoginScreen_V1
                 {
                     locked = true;
                     lTime = System.DateTime.Now;
-                    MessageBox.Show("Failure", "Login for user " + u + " is locked until:" + lTime.AddHours(2).ToLongTimeString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Login for user " + u + " is locked until:" + lTime.AddHours(2).ToLongTimeString(), "Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return false;
                 }
-                MessageBox.Show("Failure", "Incorret password for user " + u, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Incorret password for user " + u, "Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
         }
